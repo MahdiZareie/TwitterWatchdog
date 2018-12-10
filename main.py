@@ -18,11 +18,8 @@ consumer_key = os.environ.get("CONSUMER_KEY")
 consumer_secret = os.environ.get("CONSUMER_SECRET")
 SLACK_WEBHOOK = os.environ.get("SLACK_WEBHOOK")
 TELEGRAM_WEBHOOK = os.environ.get("TELEGRAM_WEBHOOK")
-TELEGRAM_WEBHOOK = os.environ.get("TELEGRAM_WEBHOOK")
 TELEGRAM_CHATID = os.environ.get("TELEGRAM_CHATID")
 tg_sendmessage = "{}/sendMessage".format(TELEGRAM_WEBHOOK)
-
-
 
 t = Twitter(auth=OAuth(token, token_secret, consumer_key, consumer_secret))
 
@@ -49,7 +46,9 @@ def send_telegram_msg(txt):
 
 class Listener(StreamListener):
     def on_data(self, data):
-        send_telegram_msg("https://twitter.com/foo/status/{}".format(json.loads(data)['id']))
+        msg = "https://twitter.com/_/status/{}".format(json.loads(data)['id'])
+        send_telegram_msg(msg)
+        send_slack_msg(msg)
         return True
 
 
