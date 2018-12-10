@@ -52,7 +52,7 @@ class Listener(StreamListener):
         return True
 
 
-with open("watch_list.txt", mode='r') as watchlist_items:
+with open("words.txt", mode='r') as watchlist_items:
     watchlist = list(map(lambda x: str(x).strip(), watchlist_items.read().split("\n")))
 
 auth = OAuthHandler(consumer_key, consumer_secret)
