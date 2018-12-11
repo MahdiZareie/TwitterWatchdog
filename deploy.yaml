@@ -1,0 +1,23 @@
+kind: InternalService
+name: twitter-watchdog
+spec:
+  image: twitter-watchdog:${V}
+  env:
+    - name: TOKEN
+      value: ${TOKEN}
+    - name: TOKEN_SECRET
+      value: ${TOKEN_SECRET}
+    - name: CONSUMER_KEY
+      value: ${CONSUMER_KEY}
+    - name: CONSUMER_SECRET
+      value: ${CONSUMER_SECRET}
+    - name: TELEGRAM_WEBHOOK
+      value: ${TELEGRAM_WEBHOOK}
+    - name: TELEGRAM_CHATID
+      value: ${TELEGRAM_CHATID}
+    - name: WORDLIST
+      value: "سرویس فندق,سرویس فندوق,paas,داکر,docker"
+
+  port_mapping:
+  resources:
+    memory: 100Mi
