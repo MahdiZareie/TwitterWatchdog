@@ -5,6 +5,7 @@ from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 import json
 from requests.sessions import Session
+import threading
 import os
 
 try:
@@ -54,16 +55,27 @@ class Listener(StreamListener):
         return True
 
 
-with open(WORDLIST, mode='r') as watchlist_items:
-    watchlist = list(map(lambda x: str(x).strip(), watchlist_items.read().split("\n")))
+def watch():
+    with open(WORDLIST, mode='r') as watchlist_items:
+        watchlist = list(map(lambda x: str(x).strip(), watchlist_items.read().split("\n")))
+    while True:
+        try:
+            auth = OAuthHandler(consumer_key, consumer_secret)
+            auth.set_access_token(token, token_secret)
+            twitterStream = Stream(auth, Listener())
+            twitterStream.filter(track=watchlist, languages=['fa', ])
+        except Exception as exp:
+            print("{} happened, but let's continue".format(exp))
 
-auth = OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(token, token_secret)
 
-twitterStream = Stream(auth, Listener())
-twitterStream.filter(track=watchlist, languages=['fa', ], is_async=True)
+def main():
+    t = threading.Thread(target=watch, )
+    t.start()
+    while True:
+        print("waiting for the next")
+        time.sleep(6 * 3600)
+        send_telegram_msg("I'm alive")
 
-while True:
-    send_telegram_msg("I'm alive")
-    print("waiting for the next")
-    time.sleep(3600 * 6)
+
+if __name__ == "__main__":
+    main()
