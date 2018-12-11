@@ -20,7 +20,8 @@ consumer_secret = os.environ.get("CONSUMER_SECRET")
 SLACK_WEBHOOK = os.environ.get("SLACK_WEBHOOK")
 TELEGRAM_WEBHOOK = os.environ.get("TELEGRAM_WEBHOOK")
 TELEGRAM_CHATID = os.environ.get("TELEGRAM_CHATID")
-WORDLIST = os.environ.get("WORDLIST", "words.txt")
+WORDLIST = os.environ.get("WORDLIST")
+
 
 tg_sendmessage = "{}/sendMessage".format(TELEGRAM_WEBHOOK)
 
@@ -56,8 +57,7 @@ class Listener(StreamListener):
 
 
 def watch():
-    with open(WORDLIST, mode='r') as watchlist_items:
-        watchlist = list(map(lambda x: str(x).strip(), watchlist_items.read().split("\n")))
+    watchlist = list(map(lambda x:str(x).strip(), str(WORDLIST).split(",")))
     while True:
         try:
             auth = OAuthHandler(consumer_key, consumer_secret)
