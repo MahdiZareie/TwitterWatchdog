@@ -5,3 +5,4 @@ WORKDIR /service
 COPY . /service
 RUN pip install -r requirements.txt
 
+ENTRYPOINT ["python", "/service/main.py"]
