@@ -22,7 +22,6 @@ TELEGRAM_WEBHOOK = os.environ.get("TELEGRAM_WEBHOOK")
 TELEGRAM_CHATID = os.environ.get("TELEGRAM_CHATID")
 WORDLIST = os.environ.get("WORDLIST")
 
-
 tg_sendmessage = "{}/sendMessage".format(TELEGRAM_WEBHOOK)
 
 t = Twitter(auth=OAuth(token, token_secret, consumer_key, consumer_secret))
@@ -50,14 +49,17 @@ def send_telegram_msg(txt):
 
 class Listener(StreamListener):
     def on_data(self, data):
-        msg = "https://twitter.com/_/status/{}".format(json.loads(data)['id'])
+        data = json.loads(data)
+        if 'retweeted_status' in data:
+            return True
+        msg = "https://twitter.com/_/status/{}".format(data['id'])
         send_telegram_msg(msg)
         send_slack_msg(msg)
         return True
 
 
 def watch():
-    watchlist = list(map(lambda x:str(x).strip(), str(WORDLIST).split(",")))
+    watchlist = list(map(lambda x: str(x).strip(), str(WORDLIST).split(",")))
     while True:
         try:
             auth = OAuthHandler(consumer_key, consumer_secret)
